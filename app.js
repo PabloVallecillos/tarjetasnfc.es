@@ -5,10 +5,10 @@
    - email: tu correo de contacto
 */
 const CONTACT = {
-  whatsapp: "34600000000",
+  whatsapp: "34687615012",
   whatsappText: "Hola! Quiero información sobre una tarjeta NFC para mi negocio.",
-  telegram: "tarjetasnfc",
-  email: "hola@tarjetasnfc.es",
+  telegram: "vallecillosmoya",
+  email: "quieromistarjetasnfc@gmail.com",
   emailSubject: "Quiero una tarjeta NFC",
 };
 
