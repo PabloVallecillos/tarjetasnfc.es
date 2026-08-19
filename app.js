@@ -20,7 +20,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.querySelectorAll('[data-contact="whatsapp"]').forEach((a) => (a.href = wa));
   document.querySelectorAll('[data-contact="telegram"]').forEach((a) => (a.href = tg));
-  document.querySelectorAll('[data-contact="email"]').forEach((a) => (a.href = mail));
+  document.querySelectorAll('[data-contact="email"]').forEach((a) => {
+    a.href = mail;
+    a.textContent = CONTACT.email; // el email visible también (legal/privacidad)
+  });
 
   // Año en el footer
   document.querySelectorAll("[data-year]").forEach((el) => (el.textContent = new Date().getFullYear()));
