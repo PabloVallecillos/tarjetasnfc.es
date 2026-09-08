@@ -13,6 +13,7 @@ const CONTACT = {
 };
 
 const GOOGLE_PLACES_API_KEY = window.TARJETASNFC_CONFIG?.googlePlacesApiKey || "";
+let googlePlacesPromise;
 
 function startApp() {
   // Rellenar enlaces de contacto
@@ -304,8 +305,9 @@ function drawPanel(ctx, x, y, w, h, color, title, subtitle, centerText) {
 function loadGooglePlaces() {
   if (window.google?.maps?.places?.PlaceAutocompleteElement) return Promise.resolve(google.maps.places);
   if (window.google?.maps?.importLibrary) return google.maps.importLibrary("places").then(normalizePlacesLibrary);
+  if (googlePlacesPromise) return googlePlacesPromise;
 
-  return new Promise((resolve, reject) => {
+  googlePlacesPromise = new Promise((resolve, reject) => {
     window.gm_authFailure = () => reject(new Error("Google Maps auth failure"));
 
     const script = document.createElement("script");
@@ -327,6 +329,8 @@ function loadGooglePlaces() {
     script.onerror = reject;
     document.head.append(script);
   });
+
+  return googlePlacesPromise;
 }
 
 async function normalizePlacesLibrary(places) {
