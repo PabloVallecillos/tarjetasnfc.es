@@ -210,12 +210,25 @@
           <div class="review-actions">
             <button class="btn btn-primary btn-sm" type="button" data-copy-review>Copiar enlace</button>
             <a class="btn btn-sm review-open" data-open-review href="#" target="_blank" rel="noopener">Abrir enlace</a>
+            <button class="btn btn-sm review-open" type="button" data-download-card>Descargar cartel NFC + QR</button>
           </div>
-          <div class="review-qr">
-            <img id="review-qr" alt="QR del enlace de reseña de Google" loading="lazy">
-            <div class="review-actions">
-              <a class="btn btn-primary btn-sm" data-download-qr href="#" download="qr-resena-google.png">Descargar QR</a>
-              <a class="btn btn-sm review-open" data-open-qr href="#" target="_blank" rel="noopener">Abrir QR</a>
+          <div class="review-preview" aria-label="Previsualización de tarjeta de reseñas Google">
+            <div class="review-preview-head">
+              <p class="review-preview-title">Déjanos tu reseña en Google</p>
+              <p>Tu opinión nos ayuda a seguir mejorando.</p>
+              <div class="review-stars" aria-label="Cinco estrellas">★★★★★</div>
+            </div>
+            <div class="review-preview-options">
+              <div class="review-preview-panel review-preview-nfc">
+                <span>Opción 1: NFC</span>
+                <strong>Acerca tu móvil aquí</strong>
+                <div class="review-nfc-icon" aria-hidden="true">NFC</div>
+              </div>
+              <div class="review-preview-panel review-preview-qr">
+                <span>Opción 2: QR</span>
+                <strong>Si no te funciona el NFC, escanea este QR</strong>
+                <img id="review-qr" alt="QR del enlace de reseña de Google" loading="lazy">
+              </div>
             </div>
           </div>
         </div>

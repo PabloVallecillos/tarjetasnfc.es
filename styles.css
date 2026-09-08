@@ -342,8 +342,22 @@ a { text-decoration: none; color: inherit; }
 .review-result { margin-top: 1.3rem; }
 .review-actions { margin-top: 1rem; display: flex; flex-wrap: wrap; gap: .7rem; }
 .review-open { border-color: var(--line); background: var(--soft); color: var(--ink); }
-.review-qr { margin-top: 1.3rem; padding-top: 1.3rem; border-top: 1px solid var(--line); }
-.review-qr img { width: 180px; height: 180px; border: 1px solid var(--line); border-radius: 14px; background: #fff; }
+.review-preview { margin-top: 1.4rem; padding: 1.2rem; border-radius: 26px; background: linear-gradient(135deg, #111827, #0f766e); color: #fff; box-shadow: 0 26px 60px -34px rgba(15, 118, 110, .8); }
+.review-preview-head { text-align: center; }
+.review-preview-title { margin: 0; font-size: clamp(1.35rem, 3vw, 2rem); font-weight: 900; line-height: 1.05; }
+.review-preview-head p:not(.review-preview-title) { margin: .45rem 0 0; color: rgba(255, 255, 255, .82); }
+.review-stars { margin-top: .65rem; color: #facc15; letter-spacing: .16em; font-size: 1.3rem; }
+.review-preview-options { margin-top: 1rem; display: grid; grid-template-columns: 1fr 1fr; gap: .9rem; }
+.review-preview-panel { min-height: 230px; padding: 1rem; border-radius: 20px; background: rgba(255, 255, 255, .94); color: var(--ink); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: .55rem; }
+.review-preview-panel span { color: var(--accent); font-weight: 800; font-size: .9rem; }
+.review-preview-panel strong { max-width: 220px; font-size: 1.05rem; line-height: 1.2; }
+.review-nfc-icon { margin-top: .4rem; width: 118px; height: 118px; border-radius: 999px; border: 2px solid rgba(15, 118, 110, .22); display: grid; place-items: center; color: var(--accent); font-weight: 900; letter-spacing: .12em; background: radial-gradient(circle, rgba(15, 118, 110, .14), transparent 62%); }
+.review-preview-qr img { width: 150px; height: 150px; padding: .45rem; border-radius: 16px; background: #fff; }
+
+@media (max-width: 640px) {
+  .review-preview-options { grid-template-columns: 1fr; }
+  .review-preview-panel { min-height: 190px; }
+}
 
 /* ---------- Contacto ---------- */
 .contact-inner { max-width: 720px; text-align: center; }
