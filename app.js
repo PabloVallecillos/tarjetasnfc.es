@@ -212,7 +212,7 @@ async function createReviewCardImage(qrSrc) {
   const qrBoxY = 710;
   const qrBoxW = 279;
   const qrBoxH = 260;
-  const qrSize = Math.min(qrBoxW, qrBoxH) - 10;
+  const qrSize = Math.min(qrBoxW, qrBoxH) - 30;
   const qrX = qrBoxX + (qrBoxW - qrSize) / 2;
   const qrY = qrBoxY + (qrBoxH - qrSize) / 2;
 
