@@ -197,8 +197,8 @@
           <span>Comparte este generador con quien lo necesite.</span>
           <button class="btn btn-sm review-open" type="button" data-copy-generator>Copiar enlace del generador</button>
         </div>
-        <label class="review-label" for="place-search">Nombre del negocio</label>
-        <input id="place-search" class="review-input" type="search" placeholder="Ej: Cafetería Centro Madrid" autocomplete="off" disabled>
+        <span class="review-label" id="place-search-label">Nombre del negocio</span>
+        <div id="place-search" class="review-autocomplete" aria-labelledby="place-search-label" hidden></div>
         <p id="review-status" class="review-status" role="status" aria-live="polite">Hace falta configurar la clave pública de Google Places para activar la búsqueda.</p>
         <div class="review-result" hidden>
           <label class="review-label" for="review-link">Enlace de reseña</label>

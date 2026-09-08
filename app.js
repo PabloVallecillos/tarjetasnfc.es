@@ -59,7 +59,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function initReviewLinkGenerator() {
   const generator = document.querySelector("#generador-resenas");
-  const search = document.querySelector("#place-search");
+  const searchWrap = document.querySelector("#place-search");
   const status = document.querySelector("#review-status");
   const result = document.querySelector(".review-result");
   const link = document.querySelector("#review-link");
@@ -67,12 +67,19 @@ function initReviewLinkGenerator() {
   const open = document.querySelector("[data-open-review]");
   const copyGenerator = document.querySelector("[data-copy-generator]");
 
-  if (!generator || !search || !status || !result || !link || !copy || !open || !copyGenerator) return;
+  if (!generator || !searchWrap || !status || !result || !link || !copy || !open || !copyGenerator) return;
+
+  let placeAutocomplete;
 
   const focusFromHash = () => {
     if (location.hash !== "#generador-resenas") return;
     generator.scrollIntoView({ block: "start" });
-    if (!search.disabled) search.focus({ preventScroll: true });
+    if (placeAutocomplete) placeAutocomplete.focus({ preventScroll: true });
+  };
+
+  const showGoogleSetupError = () => {
+    searchWrap.hidden = true;
+    status.textContent = "No se pudo activar la búsqueda de Google. Habilita Maps JavaScript API y Places API en Google Cloud, y restringe la clave para este dominio.";
   };
 
   focusFromHash();
@@ -83,33 +90,39 @@ function initReviewLinkGenerator() {
   }
 
   loadGooglePlaces()
-    .then(() => {
-      search.disabled = false;
+    .then(({ PlaceAutocompleteElement }) => {
+      placeAutocomplete = new PlaceAutocompleteElement({
+        includedPrimaryTypes: ["establishment"],
+      });
+      searchWrap.replaceChildren(placeAutocomplete);
+      searchWrap.hidden = false;
       status.textContent = "Busca tu negocio y selecciónalo de la lista de Google.";
       focusFromHash();
 
-      const autocomplete = new google.maps.places.Autocomplete(search, {
-        fields: ["name", "place_id"],
-        types: ["establishment"],
-      });
+      placeAutocomplete.addEventListener("gmp-select", async ({ placePrediction }) => {
+        let place;
 
-      autocomplete.addListener("place_changed", () => {
-        const place = autocomplete.getPlace();
-        if (!place.place_id) {
+        try {
+          place = placePrediction.toPlace();
+          await place.fetchFields({ fields: ["id", "displayName"] });
+        } catch {
+          showGoogleSetupError();
+          return;
+        }
+
+        if (!place.id) {
           status.textContent = "Selecciona un resultado de Google para generar el enlace.";
           return;
         }
 
-        const reviewUrl = `https://search.google.com/local/writereview?placeid=${encodeURIComponent(place.place_id)}`;
+        const reviewUrl = `https://search.google.com/local/writereview?placeid=${encodeURIComponent(place.id)}`;
         link.value = reviewUrl;
         open.href = reviewUrl;
         result.hidden = false;
-        status.textContent = `Enlace generado para ${place.name || "tu negocio"}.`;
+        status.textContent = `Enlace generado para ${place.displayName || "tu negocio"}.`;
       });
     })
-    .catch(() => {
-      status.textContent = "No se pudo cargar Google Places. Revisa la clave y que Places API esté habilitada.";
-    });
+    .catch(showGoogleSetupError);
 
   copy.addEventListener("click", async () => {
     if (!link.value) return;
@@ -139,14 +152,17 @@ function initReviewLinkGenerator() {
 }
 
 function loadGooglePlaces() {
-  if (window.google?.maps?.places) return Promise.resolve();
+  if (window.google?.maps?.importLibrary) return google.maps.importLibrary("places");
 
   return new Promise((resolve, reject) => {
+    window.gm_authFailure = () => reject(new Error("Google Maps auth failure"));
+
     const script = document.createElement("script");
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(GOOGLE_PLACES_API_KEY)}&libraries=places`;
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(GOOGLE_PLACES_API_KEY)}&libraries=places&loading=async`;
     script.async = true;
-    script.defer = true;
-    script.onload = resolve;
+    script.onload = () => {
+      google.maps.importLibrary("places").then(resolve, reject);
+    };
     script.onerror = reject;
     document.head.append(script);
   });
