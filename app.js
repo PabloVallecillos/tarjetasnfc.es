@@ -206,13 +206,13 @@ async function createReviewCardImage(qrSrc) {
 
   ctx.drawImage(baseImage, 0, 0);
 
-  // QR placeholder: dashed rect inside the green "Opción 2: QR" panel
-  // Measured from 1055×1491 reference image
-  const qrBoxX = 580;
-  const qrBoxY = 635;
-  const qrBoxW = 340;
-  const qrBoxH = 295;
-  const qrSize = Math.min(qrBoxW, qrBoxH) - 24;
+  // QR placeholder: inner white area of dashed rect in green "Opción 2: QR" panel
+  // Measured pixel-precise from 1055×1491 reference image
+  const qrBoxX = 642;
+  const qrBoxY = 695;
+  const qrBoxW = 279;
+  const qrBoxH = 260;
+  const qrSize = Math.min(qrBoxW, qrBoxH) - 10;
   const qrX = qrBoxX + (qrBoxW - qrSize) / 2;
   const qrY = qrBoxY + (qrBoxH - qrSize) / 2;
 
