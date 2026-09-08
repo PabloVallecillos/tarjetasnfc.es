@@ -182,7 +182,7 @@ function initReviewLinkGenerator() {
     if (!qr.src) return;
 
     try {
-      const url = await createReviewCardImage(qr.src, currentPlaceName);
+      const url = await createReviewCardImage(qr.src);
       const a = document.createElement("a");
       a.href = url;
       a.download = "cartel-resena-google-nfc-qr.png";
@@ -197,55 +197,26 @@ function initReviewLinkGenerator() {
   window.addEventListener("hashchange", focusFromHash);
 }
 
-async function createReviewCardImage(qrSrc, placeName) {
+async function createReviewCardImage(qrSrc) {
+  const [baseImage, qrImage] = await Promise.all([loadImage("/assets/nfcyqr.png"), loadImage(qrSrc)]);
   const canvas = document.createElement("canvas");
-  canvas.width = 1080;
-  canvas.height = 1500;
+  canvas.width = baseImage.naturalWidth;
+  canvas.height = baseImage.naturalHeight;
   const ctx = canvas.getContext("2d");
-  const qrImage = await loadImage(qrSrc);
 
-  ctx.fillStyle = "#ffffff";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-  roundedStroke(ctx, 35, 35, 1010, 1430, 34, "#22c55e", 8);
-  drawGoogleBars(ctx, 55, 35, 970);
+  ctx.drawImage(baseImage, 0, 0);
 
-  ctx.textAlign = "center";
-  drawGoogleTitle(ctx, 540, 145);
-  ctx.font = "500 38px Inter, Arial, sans-serif";
-  ctx.fillStyle = "#27272a";
-  ctx.fillText("Tu opinión nos ayuda a mejorar y a que", 540, 280);
-  ctx.fillText("otros clientes nos encuentren.", 540, 328);
-  ctx.font = "72px Arial, sans-serif";
-  ctx.fillStyle = "#facc15";
-  ctx.fillText("★★★★★", 540, 430);
+  // QR placeholder: dashed rect inside the green "Opción 2: QR" panel
+  // Measured from 1055×1491 reference image
+  const qrBoxX = 580;
+  const qrBoxY = 635;
+  const qrBoxW = 340;
+  const qrBoxH = 295;
+  const qrSize = Math.min(qrBoxW, qrBoxH) - 24;
+  const qrX = qrBoxX + (qrBoxW - qrSize) / 2;
+  const qrY = qrBoxY + (qrBoxH - qrSize) / 2;
 
-  drawNfcPanel(ctx, 70, 505, 460, 455);
-  drawQrPanel(ctx, 555, 505, 455, 455, qrImage);
-
-  ctx.font = "700 30px Inter, Arial, sans-serif";
-  ctx.fillStyle = "#52525b";
-  ctx.fillText("Compatible con la mayoría de móviles con NFC", 540, 1025);
-
-  ctx.font = "800 31px Inter, Arial, sans-serif";
-  ctx.fillStyle = "#111827";
-  drawStepBox(ctx, 80, 1070, "1", "Desbloquea", "tu móvil");
-  drawStepBox(ctx, 390, 1070, "2", "Acércalo", "o escanea");
-  drawStepBox(ctx, 700, 1070, "3", "Se abre", "Google reseñas");
-
-  ctx.fillStyle = "#0f172a";
-  ctx.beginPath();
-  ctx.roundRect(85, 1270, 910, 120, 28);
-  ctx.fill();
-  ctx.fillStyle = "#ffffff";
-  ctx.font = "900 42px Inter, Arial, sans-serif";
-  ctx.fillText("Consíguela en tarjetasnfc.es", 540, 1322);
-  ctx.fillStyle = "#cbd5e1";
-  ctx.font = "600 28px Inter, Arial, sans-serif";
-  ctx.fillText("Tu negocio, más cerca de tus clientes", 540, 1362);
-
-  ctx.fillStyle = "#52525b";
-  ctx.font = "500 24px Inter, Arial, sans-serif";
-  ctx.fillText(placeName, 540, 1432);
+  ctx.drawImage(qrImage, qrX, qrY, qrSize, qrSize);
 
   return new Promise((resolve, reject) => {
     canvas.toBlob((blob) => (blob ? resolve(URL.createObjectURL(blob)) : reject()), "image/png");
@@ -260,139 +231,6 @@ function loadImage(src) {
     img.onerror = reject;
     img.src = src;
   });
-}
-
-function roundedStroke(ctx, x, y, w, h, r, color, lineWidth) {
-  ctx.beginPath();
-  ctx.roundRect(x, y, w, h, r);
-  ctx.strokeStyle = color;
-  ctx.lineWidth = lineWidth;
-  ctx.stroke();
-}
-
-function drawGoogleBars(ctx, x, y, width) {
-  const colors = ["#2563eb", "#dc2626", "#facc15", "#16a34a"];
-  const segment = width / colors.length - 12;
-  colors.forEach((color, index) => {
-    ctx.fillStyle = color;
-    ctx.fillRect(x + index * (segment + 16), y, segment, 8);
-  });
-}
-
-function drawGoogleTitle(ctx, x, y) {
-  ctx.fillStyle = "#050505";
-  ctx.font = "900 78px Inter, Arial, sans-serif";
-  ctx.fillText("Déjanos tu reseña en", x, y);
-
-  const letters = [
-    ["G", "#4285f4"],
-    ["o", "#ea4335"],
-    ["o", "#fbbc05"],
-    ["g", "#4285f4"],
-    ["l", "#34a853"],
-    ["e", "#ea4335"],
-  ];
-  ctx.font = "900 86px Inter, Arial, sans-serif";
-  let left = x - letters.reduce((total, [letter]) => total + ctx.measureText(letter).width, 0) / 2;
-  letters.forEach(([letter, color]) => {
-    ctx.fillStyle = color;
-    ctx.fillText(letter, left + ctx.measureText(letter).width / 2, y + 90);
-    left += ctx.measureText(letter).width;
-  });
-}
-
-function drawNfcPanel(ctx, x, y, w, h) {
-  ctx.beginPath();
-  ctx.roundRect(x, y, w, h, 26);
-  ctx.fillStyle = "#2563eb";
-  ctx.fill();
-  ctx.fillStyle = "#ffffff";
-  ctx.font = "900 38px Inter, Arial, sans-serif";
-  ctx.fillText("Opción 1: NFC", x + w / 2, y + 60);
-  ctx.font = "800 34px Inter, Arial, sans-serif";
-  ctx.fillText("Acerca tu móvil aquí", x + w / 2, y + 116);
-
-  ctx.fillStyle = "#0f172a";
-  ctx.beginPath();
-  ctx.roundRect(x + 58, y + 150, 135, 205, 28);
-  ctx.fill();
-  ctx.fillStyle = "#ffffff";
-  ctx.beginPath();
-  ctx.roundRect(x + 70, y + 166, 111, 173, 18);
-  ctx.fill();
-  ctx.fillStyle = "#facc15";
-  ctx.font = "700 20px Arial, sans-serif";
-  ctx.fillText("★★★★★", x + 126, y + 225);
-  ctx.fillStyle = "#111827";
-  ctx.font = "800 18px Inter, Arial, sans-serif";
-  ctx.fillText("Reseña", x + 126, y + 260);
-  ctx.fillText("Google", x + 126, y + 286);
-  drawNfcWaves(ctx, x + 210, y + 245);
-
-  ctx.strokeStyle = "#ffffff";
-  ctx.setLineDash([12, 14]);
-  ctx.lineWidth = 5;
-  ctx.beginPath();
-  ctx.arc(x + 330, y + 260, 90, 0, Math.PI * 2);
-  ctx.stroke();
-  ctx.setLineDash([]);
-  ctx.fillStyle = "#ffffff";
-  ctx.font = "800 24px Inter, Arial, sans-serif";
-  ctx.fillText("Pega aquí", x + 330, y + 250);
-  ctx.fillText("la pegatina NFC", x + 330, y + 282);
-}
-
-function drawQrPanel(ctx, x, y, w, h, qrImage) {
-  ctx.beginPath();
-  ctx.roundRect(x, y, w, h, 26);
-  ctx.fillStyle = "#16a34a";
-  ctx.fill();
-  ctx.fillStyle = "#ffffff";
-  ctx.font = "900 38px Inter, Arial, sans-serif";
-  ctx.fillText("Opción 2: QR", x + w / 2, y + 60);
-  ctx.font = "800 30px Inter, Arial, sans-serif";
-  ctx.fillText("Si no te funciona el NFC,", x + w / 2, y + 116);
-  ctx.fillText("escanea este QR", x + w / 2, y + 154);
-
-  ctx.fillStyle = "#ffffff";
-  ctx.beginPath();
-  ctx.roundRect(x + 100, y + 182, 255, 255, 28);
-  ctx.fill();
-  ctx.strokeStyle = "#dcfce7";
-  ctx.lineWidth = 10;
-  ctx.stroke();
-  ctx.drawImage(qrImage, x + 125, y + 207, 205, 205);
-}
-
-function drawNfcWaves(ctx, x, y) {
-  ctx.strokeStyle = "rgba(255, 255, 255, .9)";
-  ctx.lineWidth = 6;
-  for (let i = 0; i < 3; i += 1) {
-    ctx.beginPath();
-    ctx.arc(x, y, 32 + i * 24, -0.85, 0.85);
-    ctx.stroke();
-  }
-}
-
-function drawStepBox(ctx, x, y, number, line1, line2) {
-  ctx.fillStyle = "#f8fafc";
-  ctx.beginPath();
-  ctx.roundRect(x, y, 280, 120, 20);
-  ctx.fill();
-  ctx.strokeStyle = "#e5e7eb";
-  ctx.lineWidth = 3;
-  ctx.stroke();
-  ctx.fillStyle = "#2563eb";
-  ctx.beginPath();
-  ctx.arc(x + 46, y + 60, 28, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.fillStyle = "#ffffff";
-  ctx.font = "900 30px Inter, Arial, sans-serif";
-  ctx.fillText(number, x + 46, y + 71);
-  ctx.fillStyle = "#111827";
-  ctx.font = "800 27px Inter, Arial, sans-serif";
-  ctx.fillText(line1, x + 165, y + 52);
-  ctx.fillText(line2, x + 165, y + 88);
 }
 
 function loadGooglePlaces() {
