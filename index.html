@@ -27,6 +27,7 @@
       <a href="#video">Vídeo</a>
       <a href="#producto">Producto</a>
       <a href="#usos">Usos</a>
+      <a href="#generador-resenas">Reseñas</a>
       <a href="#contacto">Contacto</a>
     </nav>
     <a class="btn btn-primary btn-sm" href="#contacto">Quiero una tarjeta</a>
@@ -186,7 +187,32 @@
     </div>
   </section>
 
-  <!-- 6 · CONTACTO -->
+  <!-- 6 · GENERADOR DE RESEÑAS -->
+  <section id="generador-resenas" class="section">
+    <div class="container review-inner">
+      <h2 class="section-title">Genera tu enlace de reseñas de Google</h2>
+      <p class="section-sub">Busca tu negocio, copia el enlace y úsalo en tu tarjeta NFC.</p>
+      <div class="card review-card" data-reveal>
+        <div class="review-share">
+          <span>Comparte este generador con quien lo necesite.</span>
+          <button class="btn btn-sm review-open" type="button" data-copy-generator>Copiar enlace del generador</button>
+        </div>
+        <label class="review-label" for="place-search">Nombre del negocio</label>
+        <input id="place-search" class="review-input" type="search" placeholder="Ej: Cafetería Centro Madrid" autocomplete="off" disabled>
+        <p id="review-status" class="review-status" role="status" aria-live="polite">Hace falta configurar la clave pública de Google Places para activar la búsqueda.</p>
+        <div class="review-result" hidden>
+          <label class="review-label" for="review-link">Enlace de reseña</label>
+          <input id="review-link" class="review-input" type="url" readonly>
+          <div class="review-actions">
+            <button class="btn btn-primary btn-sm" type="button" data-copy-review>Copiar enlace</button>
+            <a class="btn btn-sm review-open" data-open-review href="#" target="_blank" rel="noopener">Abrir enlace</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7 · CONTACTO -->
   <section id="contacto" class="section section-dark">
     <div class="container contact-inner">
       <h2 class="section-title">¿Quieres una tarjeta para tu negocio?</h2>

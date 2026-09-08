@@ -12,6 +12,13 @@ const CONTACT = {
   emailSubject: "Quiero una tarjeta NFC",
 };
 
+/* ============ Google Places ==========
+   Pon aquí una clave PÚBLICA de navegador restringida por HTTP referrer.
+   Debe tener habilitada la API "Places API" en Google Cloud.
+   No pongas claves secretas ni de servidor en este archivo estático.
+*/
+const GOOGLE_PLACES_API_KEY = "AIzaSyAkvxvEAJZxbk4FnRw4kOgtebFdtvNRfSU";
+
 document.addEventListener("DOMContentLoaded", () => {
   // Rellenar enlaces de contacto
   const wa = `https://wa.me/${CONTACT.whatsapp}?text=${encodeURIComponent(CONTACT.whatsappText)}`;
@@ -27,6 +34,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Año en el footer
   document.querySelectorAll("[data-year]").forEach((el) => (el.textContent = new Date().getFullYear()));
+
+  initReviewLinkGenerator();
 
   // Animación de aparición al hacer scroll
   const items = document.querySelectorAll("[data-reveal]");
@@ -47,3 +56,98 @@ document.addEventListener("DOMContentLoaded", () => {
   );
   items.forEach((el) => io.observe(el));
 });
+
+function initReviewLinkGenerator() {
+  const generator = document.querySelector("#generador-resenas");
+  const search = document.querySelector("#place-search");
+  const status = document.querySelector("#review-status");
+  const result = document.querySelector(".review-result");
+  const link = document.querySelector("#review-link");
+  const copy = document.querySelector("[data-copy-review]");
+  const open = document.querySelector("[data-open-review]");
+  const copyGenerator = document.querySelector("[data-copy-generator]");
+
+  if (!generator || !search || !status || !result || !link || !copy || !open || !copyGenerator) return;
+
+  const focusFromHash = () => {
+    if (location.hash !== "#generador-resenas") return;
+    generator.scrollIntoView({ block: "start" });
+    if (!search.disabled) search.focus({ preventScroll: true });
+  };
+
+  focusFromHash();
+
+  if (!GOOGLE_PLACES_API_KEY) {
+    status.textContent = "Para activar esta búsqueda, configura GOOGLE_PLACES_API_KEY en app.js.";
+    return;
+  }
+
+  loadGooglePlaces()
+    .then(() => {
+      search.disabled = false;
+      status.textContent = "Busca tu negocio y selecciónalo de la lista de Google.";
+      focusFromHash();
+
+      const autocomplete = new google.maps.places.Autocomplete(search, {
+        fields: ["name", "place_id"],
+        types: ["establishment"],
+      });
+
+      autocomplete.addListener("place_changed", () => {
+        const place = autocomplete.getPlace();
+        if (!place.place_id) {
+          status.textContent = "Selecciona un resultado de Google para generar el enlace.";
+          return;
+        }
+
+        const reviewUrl = `https://search.google.com/local/writereview?placeid=${encodeURIComponent(place.place_id)}`;
+        link.value = reviewUrl;
+        open.href = reviewUrl;
+        result.hidden = false;
+        status.textContent = `Enlace generado para ${place.name || "tu negocio"}.`;
+      });
+    })
+    .catch(() => {
+      status.textContent = "No se pudo cargar Google Places. Revisa la clave y que Places API esté habilitada.";
+    });
+
+  copy.addEventListener("click", async () => {
+    if (!link.value) return;
+
+    try {
+      await navigator.clipboard.writeText(link.value);
+      status.textContent = "Enlace copiado al portapapeles.";
+    } catch {
+      link.select();
+      document.execCommand("copy");
+      status.textContent = "Enlace seleccionado para copiar.";
+    }
+  });
+
+  copyGenerator.addEventListener("click", async () => {
+    const generatorUrl = `${location.origin}${location.pathname}#generador-resenas`;
+
+    try {
+      await navigator.clipboard.writeText(generatorUrl);
+      status.textContent = "Enlace al generador copiado al portapapeles.";
+    } catch {
+      status.textContent = `Enlace directo al generador: ${generatorUrl}`;
+    }
+  });
+
+  window.addEventListener("hashchange", focusFromHash);
+}
+
+function loadGooglePlaces() {
+  if (window.google?.maps?.places) return Promise.resolve();
+
+  return new Promise((resolve, reject) => {
+    const script = document.createElement("script");
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(GOOGLE_PLACES_API_KEY)}&libraries=places`;
+    script.async = true;
+    script.defer = true;
+    script.onload = resolve;
+    script.onerror = reject;
+    document.head.append(script);
+  });
+}
