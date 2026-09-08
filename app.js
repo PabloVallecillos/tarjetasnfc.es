@@ -209,7 +209,7 @@ async function createReviewCardImage(qrSrc) {
   // QR placeholder: inner white area of dashed rect in green "Opción 2: QR" panel
   // Measured pixel-precise from 1055×1491 reference image
   const qrBoxX = 642;
-  const qrBoxY = 695;
+  const qrBoxY = 710;
   const qrBoxW = 279;
   const qrBoxH = 260;
   const qrSize = Math.min(qrBoxW, qrBoxH) - 10;

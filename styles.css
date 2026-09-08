@@ -344,7 +344,7 @@ a { text-decoration: none; color: inherit; }
 .review-open { border-color: var(--line); background: var(--soft); color: var(--ink); }
 .review-preview { position: relative; margin-top: 1.4rem; border-radius: 26px; overflow: hidden; border: 3px solid #22c55e; box-shadow: 0 26px 60px -34px rgba(15, 118, 110, .8); }
 .review-preview-img { width: 100%; display: block; }
-.review-preview-qr-overlay { position: absolute; width: 26.5%; height: auto; top: 55.3%; left: 74.1%; transform: translate(-50%, -50%); border-radius: 8px; background: #fff; padding: 2%; display: none; }
+.review-preview-qr-overlay { position: absolute; width: 26.5%; height: auto; top: 56.3%; left: 74.1%; transform: translate(-50%, -50%); border-radius: 8px; background: #fff; padding: 2%; display: none; }
 .review-preview-qr-overlay[src] { display: block; }
 
 /* ---------- Contacto ---------- */
