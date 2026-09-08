@@ -152,6 +152,7 @@ function initReviewLinkGenerator() {
 }
 
 function loadGooglePlaces() {
+  if (window.google?.maps?.places?.PlaceAutocompleteElement) return Promise.resolve(google.maps.places);
   if (window.google?.maps?.importLibrary) return google.maps.importLibrary("places");
 
   return new Promise((resolve, reject) => {
@@ -161,7 +162,17 @@ function loadGooglePlaces() {
     script.src = `https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(GOOGLE_PLACES_API_KEY)}&libraries=places&loading=async`;
     script.async = true;
     script.onload = () => {
-      google.maps.importLibrary("places").then(resolve, reject);
+      if (window.google?.maps?.places?.PlaceAutocompleteElement) {
+        resolve(google.maps.places);
+        return;
+      }
+
+      if (window.google?.maps?.importLibrary) {
+        google.maps.importLibrary("places").then(resolve, reject);
+        return;
+      }
+
+      reject(new Error("Google Places library unavailable"));
     };
     script.onerror = reject;
     document.head.append(script);
