@@ -78,7 +78,11 @@ function initReviewLinkGenerator() {
   const focusFromHash = () => {
     if (location.hash !== "#generador-resenas") return;
     generator.scrollIntoView({ block: "start" });
-    if (placeAutocomplete) placeAutocomplete.focus({ preventScroll: true });
+    try {
+      if (placeAutocomplete) placeAutocomplete.focus();
+    } catch {
+      // Focus is a UX enhancement; the generator must still work if the web component rejects it.
+    }
   };
 
   const showGoogleSetupError = () => {
