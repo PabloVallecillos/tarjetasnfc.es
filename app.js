@@ -107,6 +107,8 @@ function initReviewLinkGenerator() {
         placeAutocomplete = new PlaceAutocompleteElement({
           includedPrimaryTypes: ["establishment"],
         });
+        placeAutocomplete.id = "place-autocomplete";
+        placeAutocomplete.setAttribute("name", "place-autocomplete");
         searchWrap.replaceChildren(placeAutocomplete);
         searchWrap.hidden = false;
         status.textContent = "Busca tu negocio y selecciónalo de la lista de Google.";
