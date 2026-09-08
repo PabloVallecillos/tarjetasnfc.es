@@ -97,48 +97,59 @@ function initReviewLinkGenerator() {
     return;
   }
 
-  loadGooglePlaces()
-    .then((places) => {
-      const PlaceAutocompleteElement = places.PlaceAutocompleteElement || google.maps.places?.PlaceAutocompleteElement;
-      if (!PlaceAutocompleteElement) throw new Error("Google Places autocomplete unavailable");
+  const mountAutocomplete = (attempt = 0) => {
+    loadGooglePlaces()
+      .then((places) => {
+        const PlaceAutocompleteElement = places.PlaceAutocompleteElement || google.maps.places?.PlaceAutocompleteElement;
+        if (!PlaceAutocompleteElement) throw new Error("Google Places autocomplete unavailable");
 
-      placeAutocomplete = new PlaceAutocompleteElement({
-        includedPrimaryTypes: ["establishment"],
-      });
-      searchWrap.replaceChildren(placeAutocomplete);
-      searchWrap.hidden = false;
-      status.textContent = "Busca tu negocio y selecciónalo de la lista de Google.";
-      focusFromHash();
+        placeAutocomplete = new PlaceAutocompleteElement({
+          includedPrimaryTypes: ["establishment"],
+        });
+        searchWrap.replaceChildren(placeAutocomplete);
+        searchWrap.hidden = false;
+        status.textContent = "Busca tu negocio y selecciónalo de la lista de Google.";
+        focusFromHash();
 
-      placeAutocomplete.addEventListener("gmp-select", async ({ placePrediction }) => {
-        let place;
+        placeAutocomplete.addEventListener("gmp-select", async ({ placePrediction }) => {
+          let place;
 
-        try {
-          place = placePrediction.toPlace();
-          await place.fetchFields({ fields: ["id", "displayName"] });
-        } catch {
-          showGoogleSetupError();
+          try {
+            place = placePrediction.toPlace();
+            await place.fetchFields({ fields: ["id", "displayName"] });
+          } catch {
+            showGoogleSetupError();
+            return;
+          }
+
+          if (!place.id) {
+            status.textContent = "Selecciona un resultado de Google para generar el enlace.";
+            return;
+          }
+
+          const reviewUrl = `https://search.google.com/local/writereview?placeid=${encodeURIComponent(place.id)}`;
+          const qrUrl = `https://quickchart.io/qr?size=320&margin=2&text=${encodeURIComponent(reviewUrl)}`;
+          currentPlaceName = place.displayName || "tu negocio";
+          link.value = reviewUrl;
+          open.href = reviewUrl;
+          qr.crossOrigin = "anonymous";
+          qr.src = qrUrl;
+          qr.alt = `QR del enlace de reseña de ${currentPlaceName}`;
+          result.hidden = false;
+          status.textContent = `Enlace generado para ${currentPlaceName}.`;
+        });
+      })
+      .catch(() => {
+        if (attempt < 20) {
+          setTimeout(() => mountAutocomplete(attempt + 1), 100);
           return;
         }
 
-        if (!place.id) {
-          status.textContent = "Selecciona un resultado de Google para generar el enlace.";
-          return;
-        }
-
-        const reviewUrl = `https://search.google.com/local/writereview?placeid=${encodeURIComponent(place.id)}`;
-        const qrUrl = `https://quickchart.io/qr?size=320&margin=2&text=${encodeURIComponent(reviewUrl)}`;
-        currentPlaceName = place.displayName || "tu negocio";
-        link.value = reviewUrl;
-        open.href = reviewUrl;
-        qr.crossOrigin = "anonymous";
-        qr.src = qrUrl;
-        qr.alt = `QR del enlace de reseña de ${currentPlaceName}`;
-        result.hidden = false;
-        status.textContent = `Enlace generado para ${currentPlaceName}.`;
+        showGoogleSetupError();
       });
-    })
-    .catch(showGoogleSetupError);
+  };
+
+  mountAutocomplete();
 
   copy.addEventListener("click", async () => {
     if (!link.value) return;
