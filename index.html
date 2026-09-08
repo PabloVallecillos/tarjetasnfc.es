@@ -3,8 +3,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Tarjetas NFC — Reseñas de Google con un solo toque</title>
-  <meta name="description" content="Tarjetas NFC personalizadas para reseñas de Google, redes sociales, WhatsApp, llamadas, WiFi y mucho más. Sin aplicaciones: acerca el móvil y listo.">
+  <title>Generador de enlaces de reseñas Google para tarjetas NFC y QR</title>
+  <meta name="description" content="Genera enlaces de reseñas de Google y códigos QR para tarjetas NFC. Tarjetas NFC personalizadas para reseñas, redes sociales, WhatsApp, llamadas y WiFi.">
+  <meta name="keywords" content="generador enlaces reseñas Google, enlace reseña Google, QR reseñas Google, tarjetas NFC reseñas, NFC Google reviews">
   <meta property="og:title" content="Tarjetas NFC — Conecta con tus clientes con un solo toque">
   <meta property="og:description" content="Tarjetas NFC personalizadas para reseñas, redes sociales, llamadas y mucho más.">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
@@ -192,6 +193,9 @@
     <div class="container review-inner">
       <h2 class="section-title">Genera tu enlace de reseñas de Google</h2>
       <p class="section-sub">Busca tu negocio, copia el enlace y úsalo en tu tarjeta NFC.</p>
+      <div class="review-seo-copy">
+        <p>Este generador crea el enlace directo para que tus clientes dejen una reseña en Google. También genera un código QR con ese mismo enlace, útil para tarjetas NFC, mostradores, cartas, flyers o escaparates.</p>
+      </div>
       <div class="card review-card" data-reveal>
         <div class="review-share">
           <span>Comparte este generador con quien lo necesite.</span>
@@ -206,6 +210,13 @@
           <div class="review-actions">
             <button class="btn btn-primary btn-sm" type="button" data-copy-review>Copiar enlace</button>
             <a class="btn btn-sm review-open" data-open-review href="#" target="_blank" rel="noopener">Abrir enlace</a>
+          </div>
+          <div class="review-qr">
+            <img id="review-qr" alt="QR del enlace de reseña de Google" loading="lazy">
+            <div class="review-actions">
+              <a class="btn btn-primary btn-sm" data-download-qr href="#" download="qr-resena-google.png">Descargar QR</a>
+              <a class="btn btn-sm review-open" data-open-qr href="#" target="_blank" rel="noopener">Abrir QR</a>
+            </div>
           </div>
         </div>
       </div>
@@ -258,6 +269,22 @@
   </div>
 </footer>
 
-<script src="/app.js"></script>
+<script>
+  window.TARJETASNFC_CONFIG = window.TARJETASNFC_CONFIG || {};
+  fetch("/config.js", { cache: "no-store" })
+    .then((response) => (response.ok ? response.text() : ""))
+    .then((code) => {
+      if (code) {
+        const config = document.createElement("script");
+        config.text = code;
+        document.head.append(config);
+      }
+    })
+    .finally(() => {
+      const app = document.createElement("script");
+      app.src = "/app.js";
+      document.body.append(app);
+    });
+</script>
 </body>
 </html>

@@ -12,14 +12,9 @@ const CONTACT = {
   emailSubject: "Quiero una tarjeta NFC",
 };
 
-/* ============ Google Places ==========
-   Pon aquí una clave PÚBLICA de navegador restringida por HTTP referrer.
-   Debe tener habilitada la API "Places API" en Google Cloud.
-   No pongas claves secretas ni de servidor en este archivo estático.
-*/
-const GOOGLE_PLACES_API_KEY = "AIzaSyAkvxvEAJZxbk4FnRw4kOgtebFdtvNRfSU";
+const GOOGLE_PLACES_API_KEY = window.TARJETASNFC_CONFIG?.googlePlacesApiKey || "";
 
-document.addEventListener("DOMContentLoaded", () => {
+function startApp() {
   // Rellenar enlaces de contacto
   const wa = `https://wa.me/${CONTACT.whatsapp}?text=${encodeURIComponent(CONTACT.whatsappText)}`;
   const tg = `https://t.me/${CONTACT.telegram}`;
@@ -55,7 +50,13 @@ document.addEventListener("DOMContentLoaded", () => {
     { threshold: 0.12 }
   );
   items.forEach((el) => io.observe(el));
-});
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", startApp);
+} else {
+  startApp();
+}
 
 function initReviewLinkGenerator() {
   const generator = document.querySelector("#generador-resenas");
@@ -66,8 +67,11 @@ function initReviewLinkGenerator() {
   const copy = document.querySelector("[data-copy-review]");
   const open = document.querySelector("[data-open-review]");
   const copyGenerator = document.querySelector("[data-copy-generator]");
+  const qr = document.querySelector("#review-qr");
+  const downloadQr = document.querySelector("[data-download-qr]");
+  const openQr = document.querySelector("[data-open-qr]");
 
-  if (!generator || !searchWrap || !status || !result || !link || !copy || !open || !copyGenerator) return;
+  if (!generator || !searchWrap || !status || !result || !link || !copy || !open || !copyGenerator || !qr || !downloadQr || !openQr) return;
 
   let placeAutocomplete;
 
@@ -85,7 +89,7 @@ function initReviewLinkGenerator() {
   focusFromHash();
 
   if (!GOOGLE_PLACES_API_KEY) {
-    status.textContent = "Para activar esta búsqueda, configura GOOGLE_PLACES_API_KEY en app.js.";
+    status.textContent = "Para activar esta búsqueda, crea config.js con la clave pública restringida de Google Places.";
     return;
   }
 
@@ -116,8 +120,13 @@ function initReviewLinkGenerator() {
         }
 
         const reviewUrl = `https://search.google.com/local/writereview?placeid=${encodeURIComponent(place.id)}`;
+        const qrUrl = `https://quickchart.io/qr?size=320&margin=2&text=${encodeURIComponent(reviewUrl)}`;
         link.value = reviewUrl;
         open.href = reviewUrl;
+        qr.src = qrUrl;
+        qr.alt = `QR del enlace de reseña de ${place.displayName || "tu negocio"}`;
+        downloadQr.href = qrUrl;
+        openQr.href = qrUrl;
         result.hidden = false;
         status.textContent = `Enlace generado para ${place.displayName || "tu negocio"}.`;
       });
