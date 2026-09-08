@@ -318,9 +318,12 @@ function loadGooglePlaces() {
   });
 }
 
-function normalizePlacesLibrary(places) {
-  return {
-    ...places,
-    PlaceAutocompleteElement: places?.PlaceAutocompleteElement || window.google?.maps?.places?.PlaceAutocompleteElement,
-  };
+async function normalizePlacesLibrary(places) {
+  for (let i = 0; i < 20; i += 1) {
+    const PlaceAutocompleteElement = places?.PlaceAutocompleteElement || window.google?.maps?.places?.PlaceAutocompleteElement;
+    if (PlaceAutocompleteElement) return { ...places, PlaceAutocompleteElement };
+    await new Promise((resolve) => setTimeout(resolve, 50));
+  }
+
+  return places || {};
 }
