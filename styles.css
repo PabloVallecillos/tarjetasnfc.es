@@ -192,6 +192,7 @@ a { text-decoration: none; color: inherit; }
 .section-soft { background: var(--soft); }
 
 .section-title { font-size: clamp(1.7rem, 3.4vw, 2.4rem); letter-spacing: -.02em; font-weight: 800; text-align: center; }
+.section-title.left, .section-sub.left { text-align: left; }
 .section-dark .section-title { color: #fff; }
 .section-sub { text-align: center; color: var(--muted); margin-top: .5rem; font-size: 1.05rem; }
 .section-dark .section-sub { color: var(--text-dim); }
@@ -346,6 +347,20 @@ a { text-decoration: none; color: inherit; }
 .review-preview-img { width: 100%; display: block; }
 .review-preview-qr-overlay { position: absolute; width: 24.8%; height: auto; top: 55.6%; left: 74.1%; transform: translate(-50%, -50%); border-radius: 8px; background: #fff; padding: 2%; display: none; }
 .review-preview-qr-overlay[src] { display: block; }
+
+/* ---------- Configurar NFC ---------- */
+.nfc-tools-grid { display: grid; grid-template-columns: 1.1fr .9fr; gap: 3rem; align-items: center; }
+.store-links { margin-top: 1.4rem; display: flex; flex-wrap: wrap; gap: .8rem; }
+.nfc-steps { margin-top: 1.6rem; padding-left: 1.25rem; color: var(--muted); }
+.nfc-steps li { margin-top: .75rem; padding-left: .25rem; }
+.nfc-steps a { color: var(--accent); font-weight: 700; }
+.nfc-warning { margin-top: 1.4rem; padding: 1rem 1.1rem; border: 1px solid #f59e0b; border-radius: 16px; background: #fff7ed; color: #7c2d12; }
+.nfc-tools-video { border-radius: 22px; overflow: hidden; border: 1px solid var(--line); box-shadow: var(--shadow); background: #000; }
+.nfc-tools-video video { width: 100%; aspect-ratio: 720 / 1280; object-fit: cover; }
+
+@media (max-width: 860px) {
+  .nfc-tools-grid { grid-template-columns: 1fr; }
+}
 
 /* ---------- Contacto ---------- */
 .contact-inner { max-width: 720px; text-align: center; }
