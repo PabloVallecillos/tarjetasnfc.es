@@ -37,6 +37,7 @@ function startApp() {
   const items = document.querySelectorAll("[data-reveal]");
   if (!("IntersectionObserver" in window)) {
     items.forEach((el) => el.classList.add("visible"));
+    restoreHashScroll();
     return;
   }
   const io = new IntersectionObserver(
@@ -51,6 +52,8 @@ function startApp() {
     { threshold: 0.12 }
   );
   items.forEach((el) => io.observe(el));
+
+  restoreHashScroll();
 }
 
 if (document.readyState === "loading") {
@@ -113,6 +116,7 @@ function initReviewLinkGenerator() {
         searchWrap.hidden = false;
         status.textContent = "Busca tu negocio y selecciónalo de la lista de Google.";
         focusFromHash();
+        restoreHashScroll();
 
         placeAutocomplete.addEventListener("gmp-select", async ({ placePrediction }) => {
           let place;
@@ -195,6 +199,13 @@ function initReviewLinkGenerator() {
   });
 
   window.addEventListener("hashchange", focusFromHash);
+}
+
+function restoreHashScroll() {
+  if (!location.hash || location.hash === "#generador-resenas") return;
+  const target = document.getElementById(decodeURIComponent(location.hash.slice(1)));
+  if (!target) return;
+  requestAnimationFrame(() => target.scrollIntoView({ block: "start" }));
 }
 
 async function createReviewCardImage(qrSrc) {
