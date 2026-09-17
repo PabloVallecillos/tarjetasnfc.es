@@ -1,7 +1,3 @@
-node_modules/
-.vercel/
-.DS_Store
-/config.js
 .service_role_key.txt
 .agents/
 .atl/
@@ -14,3 +10,5 @@ node_modules/
 .vibe/
 .windsurf/
 skills-lock.json
+node_modules/
+.vercel/

@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Configurar QR | TarjetasNFC</title>
+  <meta name="robots" content="noindex">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body class="setup-page">
+<main class="setup-shell">
+  <section class="setup-card">
+    <a class="setup-brand" href="/">Tarjetas<span>NFC</span></a>
+    <h1>Configura el destino de tu QR</h1>
+    <p class="setup-copy">Introduce tu email, abre el enlace mágico y guarda la URL a la que debe redirigir esta tarjeta.</p>
+
+    <p id="setup-status" class="setup-status setup-status-loading" role="status" aria-live="polite">Cargando configuración...</p>
+
+    <section id="auth-stage" class="card setup-stage" hidden>
+      <h2>1. Autenticación</h2>
+      <p>Primero entra con tu email. Después podrás configurar el QR.</p>
+      <form id="auth-form" class="setup-form">
+        <label for="email">Email</label>
+        <input id="email" class="review-input" type="email" autocomplete="email" required placeholder="tu@email.com">
+        <button class="btn btn-primary btn-sm" type="submit">Enviar enlace mágico</button>
+      </form>
+    </section>
+
+    <section id="config-stage" class="card setup-stage" hidden>
+      <h2>2. Configuración</h2>
+      <p>Indica la URL a la que debe redirigir esta tarjeta.</p>
+      <form id="card-form" class="setup-form">
+        <label for="card-id">ID de tarjeta</label>
+        <input id="card-id" class="review-input" name="card" autocomplete="off" required pattern="[A-Za-z0-9_-]{3,64}">
+
+        <label for="redirect-url">URL de destino</label>
+        <input id="redirect-url" class="review-input" type="url" required placeholder="https://tuweb.com/resenas">
+
+        <button class="btn btn-primary btn-sm" type="submit">Guardar destino</button>
+        <button id="logout" class="btn btn-sm review-open" type="button">Salir</button>
+      </form>
+    </section>
+  </section>
+</main>
+
+<script>
+  window.TARJETASNFC_CONFIG = window.TARJETASNFC_CONFIG || {};
+  fetch("/config.js", { cache: "no-store" })
+    .then((response) => (response.ok ? response.text() : ""))
+    .then((code) => {
+      if (code) {
+        const config = document.createElement("script");
+        config.text = code;
+        document.head.append(config);
+      }
+    })
+    .finally(() => {
+      const supabase = document.createElement("script");
+      supabase.src = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2";
+      supabase.onload = () => {
+        const app = document.createElement("script");
+        app.src = "/setup.js";
+        document.body.append(app);
+      };
+      document.body.append(supabase);
+    });
+</script>
+</body>
+</html>

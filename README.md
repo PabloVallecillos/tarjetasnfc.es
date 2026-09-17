@@ -16,7 +16,9 @@ La clave pública de Google no va en el código versionado. Para local, puedes c
 
 ```js
 window.TARJETASNFC_CONFIG = {
-  googlePlacesApiKey: "TU_CLAVE_PUBLICA_RESTRINGIDA"
+  googlePlacesApiKey: "TU_CLAVE_PUBLICA_RESTRINGIDA",
+  supabaseUrl: "TU_SUPABASE_URL",
+  supabaseAnonKey: "TU_SUPABASE_ANON_KEY"
 };
 ```
 
@@ -27,6 +29,19 @@ Pasos mínimos:
 3. Habilita Maps JavaScript API y Places API.
 4. Restringe la clave por HTTP referrer al dominio de producción.
 5. En Vercel, configura la variable de entorno `GOOGLE_PLACES_API_KEY`. El build genera `/config.js` sin commitear la clave.
+
+## QR redirigible con Supabase
+
+Los QR físicos pueden apuntar a `/r/ID_DE_TARJETA`. Vercel reescribe esa ruta a `/api/redirect`, que consulta Supabase con una clave server-only y redirige al `redirect_url` configurado. Si la tarjeta no existe o no tiene destino, manda a `/setup.html?card=ID_DE_TARJETA`.
+
+Variables de entorno necesarias en Vercel:
+
+- `SUPABASE_URL` — URL pública del proyecto Supabase.
+- `SUPABASE_ANON_KEY` — clave anon pública para `/setup.html`.
+- `SUPABASE_SERVICE_ROLE_KEY` — clave server-only para la función de redirección. No se expone en `config.js`.
+- `GOOGLE_PLACES_API_KEY` — opcional para el generador de reseñas.
+
+Aplica `supabase.sql` en Supabase para crear la tabla `cards`, checks, índice, trigger de `updated_at` y políticas RLS. La configuración pública permite a usuarios autenticados crear/reclamar tarjetas libres con su `owner_id` y gestionar sólo sus propias tarjetas. La consulta pública de redirección queda server-side en Vercel.
 
 ## QR de reseñas
 
