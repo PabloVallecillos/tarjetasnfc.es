@@ -27,10 +27,12 @@ form.addEventListener("submit", (e) => {
     const card = tpl.content.cloneNode(true);
     const canvas = card.querySelector(".gen-qr-canvas");
 
-    QRCode.toCanvas(canvas, url, {
-      width: 120,
-      margin: 0,
-      color: { dark: "#000000", light: "#ffffff" },
+    new QRious({
+      element: canvas,
+      value: url,
+      size: 120,
+      background: "#ffffff",
+      foreground: "#000000",
     });
 
     output.appendChild(card);
