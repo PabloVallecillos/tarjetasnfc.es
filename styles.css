@@ -455,3 +455,170 @@ a { text-decoration: none; color: inherit; }
 .legal-body h2 { margin-top: 2rem; font-size: 1.15rem; }
 .legal-body p, .legal-body li { color: var(--muted); margin-top: .6rem; font-size: .98rem; }
 .legal-body ul { padding-left: 1.4rem; }
+
+/* ---------- Generador de tarjetas ---------- */
+.gen-panel {
+  max-width: 520px;
+}
+.gen-panel h1 {
+  color: #fff;
+  line-height: 1.15;
+}
+.gen-form {
+  margin-top: 1.5rem;
+  display: grid;
+  gap: .7rem;
+}
+.gen-form label {
+  font-weight: 700;
+  color: var(--text-dark);
+}
+.gen-actions {
+  margin-top: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: .6rem;
+}
+.gen-grid {
+  width: min(1120px, 92%);
+  margin: 2rem auto 4rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.6rem;
+}
+
+/* --- Card --- */
+.gen-card {
+  width: 100%;
+  max-width: 340px;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 30px 70px -25px rgba(99, 102, 241, .35);
+  background: #111;
+  color: #111;
+  position: relative;
+}
+.gen-card-inner {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Top half */
+.gen-card-top {
+  background: linear-gradient(145deg, #1a1a1a 0%, #111 100%);
+  padding: 2rem 1.6rem 1.2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  color: #fff;
+  gap: .6rem;
+}
+.gen-card-copy {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.gen-card-title {
+  font-size: 1.35rem;
+  font-weight: 800;
+  line-height: 1.2;
+}
+.gen-stars {
+  margin-top: .35rem;
+  font-size: 2rem;
+  letter-spacing: .08em;
+  color: #fbbf24;
+}
+
+/* Bottom half */
+.gen-card-bottom {
+  background: #fff;
+  padding: 1.4rem 1.6rem 1rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+.gen-label {
+  display: block;
+  font-size: .65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  color: #555;
+  margin-bottom: .45rem;
+}
+
+/* NFC side */
+.gen-nfc-side {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.gen-nfc-icon {
+  width: 80px;
+  height: 80px;
+}
+
+/* QR side */
+.gen-qr-side {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.gen-qr-frame {
+  position: relative;
+  width: 128px;
+  height: 128px;
+  display: grid;
+  place-items: center;
+}
+.gen-qr-canvas {
+  display: block;
+}
+.gen-qr-corners {
+  position: absolute;
+  inset: -4px;
+}
+.gen-qr-corners span {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border: 3px solid #111;
+}
+.gen-qr-corners span:nth-child(1) { top: 0; left: 0; border-right: 0; border-bottom: 0; }
+.gen-qr-corners span:nth-child(2) { top: 0; right: 0; border-left: 0; border-bottom: 0; }
+.gen-qr-corners span:nth-child(3) { bottom: 0; left: 0; border-right: 0; border-top: 0; }
+.gen-qr-corners span:nth-child(4) { bottom: 0; right: 0; border-left: 0; border-top: 0; }
+
+/* Footer */
+.gen-card-footer {
+  background: #fff;
+  text-align: center;
+  font-size: .7rem;
+  font-weight: 600;
+  color: #888;
+  padding-bottom: 1rem;
+}
+
+/* Print styles */
+@media print {
+  .setup-page { background: #fff !important; }
+  .gen-panel, .gen-actions, .gen-status { display: none !important; }
+  .gen-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1rem;
+    width: 100%;
+    margin: 0;
+    padding: 0.5cm;
+  }
+  .gen-card {
+    max-width: none;
+    box-shadow: none;
+    border: 1px solid #ccc;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+}
