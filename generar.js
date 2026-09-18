@@ -10,7 +10,7 @@
       label: "Azul Google",
       img: "/assets/nfcgooglesquare.png",
       // QR placement in bracket area (1254×1254) — centered
-      qr: { x: 740, y: 820, w: 340, h: 260, padding: 0 },
+      qr: { x: 720, y: 800, w: 400, h: 340, padding: 0 },
     },
   };
 
