@@ -483,121 +483,15 @@ a { text-decoration: none; color: inherit; }
   width: min(1120px, 92%);
   margin: 2rem auto 4rem;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 1.6rem;
   justify-items: center;
 }
-
-/* --- Card --- */
-.gen-card {
+.gen-card-img {
   width: 100%;
   max-width: 360px;
-  border-radius: 20px;
-  overflow: hidden;
+  border-radius: 16px;
   box-shadow: 0 20px 60px -20px rgba(0, 0, 0, .3);
-  background: #fff;
-  color: #111;
-}
-
-/* Top half — blue */
-.gen-card-top {
-  background: #4285f4;
-  padding: 2rem 1.8rem 2.4rem;
-}
-.gen-card-top-inner {
-  display: flex;
-  align-items: center;
-  gap: 1.2rem;
-}
-.gen-google-g {
-  flex-shrink: 0;
-}
-.gen-card-text {
-  display: flex;
-  flex-direction: column;
-  gap: .3rem;
-}
-.gen-card-title {
-  font-size: 1.4rem;
-  font-weight: 800;
-  line-height: 1.15;
-  color: #fff;
-}
-.gen-stars {
-  font-size: 1.6rem;
-  letter-spacing: .06em;
-  color: #fbbc04;
-}
-
-/* Wave divider */
-.gen-wave {
-  display: block;
-  width: 100%;
-  height: 30px;
-  margin-top: -1px;
-  position: relative;
-  z-index: 1;
-}
-
-/* Bottom half — white */
-.gen-card-bottom {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: .8rem;
-  padding: 1rem 1.6rem .6rem;
-}
-.gen-half {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-}
-.gen-label {
-  font-size: .75rem;
-  font-weight: 700;
-  color: #111;
-  margin-bottom: .5rem;
-}
-
-/* NFC icon */
-.gen-nfc-img {
-  width: 100px;
-  height: 80px;
-}
-
-/* QR */
-.gen-qr-frame {
-  position: relative;
-  width: 110px;
-  height: 110px;
-  display: grid;
-  place-items: center;
-}
-.gen-qr-canvas {
-  display: block;
-}
-.gen-qr-corners {
-  position: absolute;
-  inset: -4px;
-}
-.gen-qr-corners span {
-  position: absolute;
-  width: 16px;
-  height: 16px;
-  border: 2.5px solid #111;
-}
-.gen-qr-corners span:nth-child(1) { top: 0; left: 0; border-right: 0; border-bottom: 0; }
-.gen-qr-corners span:nth-child(2) { top: 0; right: 0; border-left: 0; border-bottom: 0; }
-.gen-qr-corners span:nth-child(3) { bottom: 0; left: 0; border-right: 0; border-top: 0; }
-.gen-qr-corners span:nth-child(4) { bottom: 0; right: 0; border-left: 0; border-top: 0; }
-
-/* Footer */
-.gen-card-footer {
-  text-align: right;
-  font-size: .7rem;
-  font-weight: 500;
-  color: #999;
-  padding: .4rem 1.2rem .8rem;
 }
 
 /* Print: one card per page */
@@ -610,17 +504,19 @@ a { text-decoration: none; color: inherit; }
     margin: 0;
     padding: 0;
   }
-  .gen-card {
+  .gen-card-img {
+    display: block;
     width: 90mm;
     max-width: none;
     margin: 10mm auto;
     box-shadow: none;
+    border-radius: 0;
     border: 1px solid #ddd;
     break-inside: avoid;
     page-break-inside: avoid;
     page-break-after: always;
   }
-  .gen-card:last-child {
+  .gen-card-img:last-child {
     page-break-after: auto;
   }
 }
