@@ -277,7 +277,7 @@ a { text-decoration: none; color: inherit; }
   box-shadow: 0 30px 70px -25px rgba(99, 102, 241, .4);
   background: linear-gradient(160deg, rgba(99, 102, 241, .06), rgba(34, 211, 238, .06));
 }
-.img-frame img { width: 100%; aspect-ratio: 1; object-fit: cover; }
+.img-frame img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
 .badge {
   position: absolute;
   top: -14px;
