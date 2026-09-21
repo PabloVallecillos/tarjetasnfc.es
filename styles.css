@@ -268,8 +268,8 @@ a { text-decoration: none; color: inherit; }
 }
 
 /* ---------- Producto ---------- */
-.producto-grid { display: grid; grid-template-columns: 1fr 1.1fr; gap: 4rem; align-items: center; }
-.producto-img { position: relative; max-width: 400px; margin-inline: auto; }
+.producto-grid { display: grid; grid-template-columns: 1.15fr 1fr; gap: 4.5rem; align-items: center; }
+.producto-img { position: relative; max-width: 600px; margin-inline: auto; }
 .img-frame {
   border-radius: 24px;
   overflow: hidden;
@@ -277,7 +277,7 @@ a { text-decoration: none; color: inherit; }
   box-shadow: 0 30px 70px -25px rgba(99, 102, 241, .4);
   background: linear-gradient(160deg, rgba(99, 102, 241, .06), rgba(34, 211, 238, .06));
 }
-.img-frame img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
+.img-frame img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; object-position: center; }
 .badge {
   position: absolute;
   top: -14px;
@@ -307,7 +307,7 @@ a { text-decoration: none; color: inherit; }
 
 @media (max-width: 860px) {
   .producto-grid { grid-template-columns: 1fr; gap: 3rem; }
-  .producto-img { max-width: 340px; }
+  .producto-img { max-width: 100%; }
 }
 
 /* ---------- Usos ---------- */
