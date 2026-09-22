@@ -516,6 +516,9 @@ a { text-decoration: none; color: inherit; }
     page-break-inside: avoid;
     page-break-after: always;
   }
+  .gen-card-img-large {
+    width: 110mm;
+  }
   .gen-card-img:last-child {
     page-break-after: auto;
   }

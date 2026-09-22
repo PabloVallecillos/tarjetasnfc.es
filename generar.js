@@ -9,6 +9,7 @@
     "nfcgooglesquare": {
       label: "Azul Google",
       img: "/assets/nfcgooglesquare.png",
+      printClass: "gen-card-img-large",
       // QR placement in bracket area (1254×1254) — centered
       qr: { x: 765, y: 758, w: 340, h: 340, padding: 0 },
     },
@@ -63,6 +64,7 @@
       img.src = blobUrl;
       img.alt = `Tarjeta ${id}`;
       img.className = "gen-card-img";
+      if (design.printClass) img.classList.add(design.printClass);
       output.appendChild(img);
     }
 
